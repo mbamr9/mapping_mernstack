@@ -29,4 +29,24 @@ Router.post("/register" , async (req, res)=>{
     }
 })
 
+
+//login
+
+Router.get("/login", async (req , res) =>{
+    try{
+        //finde user
+        const currentUser = await User.findOne({username:req.body.username})
+          !currentUser && res.status(400).json('wrong user name or password')
+          
+       
+          const validPassword =bcrypt.compare(req.body.password, currentUser.password)
+          !validPassword && res.status(400).json('wrong user name or password')
+                    
+          res.status(200).json({_id:currentUser._id , username:currentUser.username})
+              
+    }catch(error){
+        res.status(500).json(error)
+
+    }
+})
 export default Router;
